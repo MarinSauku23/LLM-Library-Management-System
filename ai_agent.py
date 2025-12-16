@@ -76,7 +76,7 @@ def generate_natural_answer(user_question: str, sql_query: str, rows: list[dict]
             {"role": "system", "content": ANSWER_PROMPT},
             {"role": "user", "content": meta_info},
         ],
-        temperature=0.4,
+        temperature=0,
     )
 
     content = response.choices[0].message.content or ""
