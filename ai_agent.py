@@ -80,6 +80,14 @@ def generate_natural_answer(user_question: str, sql_query: str, rows: list[dict]
     )
 
     content = response.choices[0].message.content or ""
+
+    # DEBUG: Log what we're sending and receiving
+    print("=== DEBUG ANSWER GENERATION ===")
+    print(f"Rows sent to AI: {rows_json}")
+    print(f"Temperature: 0")
+    print(f"AI Response: {content}")
+    print("================================")
+
     return content.strip()
 
 
