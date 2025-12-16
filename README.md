@@ -340,7 +340,7 @@ Test Account:
 - Password: test123
 
 *Note: Please be respectful with the demo account. The AI chatbot uses OpenAI API which has usage costs.*
-
+_The database currently has three other users and one admin_
 
 Developed with ❤️ for Ritech International AG
 Project Duration: 14 days | December 2025
