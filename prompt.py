@@ -32,7 +32,7 @@ For admins (IS_ADMIN = 1):
 - When counting users or books for statistics, always exclude admins: users.is_admin = FALSE.
 
 Examples of correct queries:
-- "Which is the most popular book?" → SELECT books.title, COUNT(books.id) AS popularity FROM books JOIN users ON books.user_id = users.id WHERE users.is_admin = FALSE GROUP BY LOWER(books.title), books.title ORDER BY popularity DESC LIMIT 1;
+- "Which is the most popular book?" → SELECT MIN(books.title) as title, COUNT(books.id) AS popularity FROM books JOIN users ON books.user_id = users.id WHERE users.is_admin = FALSE GROUP BY LOWER(books.title) ORDER BY popularity DESC LIMIT 1;
 - "Who has the most books?" → SELECT users.name, COUNT(books.id) AS book_count FROM users JOIN books ON users.id = books.user_id WHERE users.is_admin = FALSE GROUP BY users.id ORDER BY book_count DESC LIMIT 1;
 - "List all users" → SELECT name, email FROM users WHERE is_admin = FALSE;
 """
