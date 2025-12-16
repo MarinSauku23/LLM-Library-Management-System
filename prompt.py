@@ -18,6 +18,7 @@ IMPORTANT RULES:
 - CRITICAL: is_admin is a BOOLEAN column. ALWAYS use TRUE/FALSE, NEVER use 1/0.
   Correct: WHERE users.is_admin = FALSE
   Wrong: WHERE users.is_admin = 0
+- When grouping by title or comparing titles, use LOWER(books.title) for case-insensitive matching.
 
 For non-admin users (IS_ADMIN = 0):
 - When the question refers to "my books", "my reading list", "what am I reading", etc.,
@@ -30,7 +31,8 @@ For admins (IS_ADMIN = 1):
 - You may query across all non-admin users (users.is_admin = FALSE).
 - When counting users or books for statistics, always exclude admins: users.is_admin = FALSE.
 
-Examples of correct boolean usage:
+Examples of correct queries:
+- "Which is the most popular book?" → SELECT books.title, COUNT(books.id) AS popularity FROM books JOIN users ON books.user_id = users.id WHERE users.is_admin = FALSE GROUP BY LOWER(books.title), books.title ORDER BY popularity DESC LIMIT 1;
 - "Who has the most books?" → SELECT users.name, COUNT(books.id) AS book_count FROM users JOIN books ON users.id = books.user_id WHERE users.is_admin = FALSE GROUP BY users.id ORDER BY book_count DESC LIMIT 1;
 - "List all users" → SELECT name, email FROM users WHERE is_admin = FALSE;
 """
