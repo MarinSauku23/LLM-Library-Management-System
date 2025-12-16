@@ -262,7 +262,7 @@ def add_book():
     addbook_form = AddBooks()
     if addbook_form.validate_on_submit():
         new_book = Books(
-            title=addbook_form.title.data.title(),
+            title=addbook_form.title.data.strip().title(),
             author=addbook_form.author.data.title(),
             genre=addbook_form.genre.data.title(),
             reading_status=addbook_form.reading_status.data,
@@ -290,7 +290,7 @@ def edit_book(book_id):
     edit_form.submit.label.text = "Save"
 
     if edit_form.validate_on_submit():
-        book.title = edit_form.title.data
+        book.title = edit_form.title.data.strip().title()
         book.author = edit_form.author.data
         book.genre = edit_form.genre.data
         book.reading_status = edit_form.reading_status.data
@@ -685,7 +685,7 @@ def admin_add_book(user_id):
     form = AddBooks()
     if form.validate_on_submit():
         new_book = Books(
-            title=form.title.data.title(),
+            title=form.title.data.title().strip().title(),
             author=form.author.data.title(),
             genre=form.genre.data.title(),
             reading_status=form.reading_status.data,
@@ -739,3 +739,18 @@ def debug_books():
 
     return jsonify(result)
 
+
+# fixes the existing bad data
+@blueprint.route("/debug/cleanup-titles")
+@login_required
+@admin_only
+def cleanup_titles():
+    books = Books.query.all()
+    count = 0
+    for book in books:
+        trimmed = book.title.strip()
+        if book.title != trimmed:
+            book.title = trimmed
+            count += 1
+    db.session.commit()
+    return jsonify({"cleaned": count, "message": f"Cleaned {count} book titles"})
