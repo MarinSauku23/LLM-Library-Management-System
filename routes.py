@@ -715,3 +715,27 @@ def admin_delete_user(user_id):
     db.session.commit()
     return redirect(url_for("blueprint.manage_users"))
 
+
+# testing an ai answer bug
+@blueprint.route("/debug/books")
+@login_required
+@admin_only
+def debug_books():
+    books = db.session.execute(
+        db.select(Books.title, Books.author, User.name, User.email)
+        .join(User)
+        .where(User.is_admin == False)
+        .order_by(Books.title)
+    ).all()
+
+    result = []
+    for book in books:
+        result.append({
+            "title": book.title,
+            "author": book.author,
+            "user": book.name,
+            "email": book.email
+        })
+
+    return jsonify(result)
+
