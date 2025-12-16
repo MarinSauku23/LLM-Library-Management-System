@@ -1,0 +1,344 @@
+/*  design tokens  */
+:root {
+  --accent: #0085a1;
+  --accent-soft: #e4f6fa;
+  --accent-strong: #006b82;
+  --danger: #e03131;
+  --danger-soft: #ffe3e3;
+  --text-main: #1f2933;
+  --text-muted: #6b7280;
+  --bg-page: #f4f5f7;
+  --bg-card: #ffffff;
+  --border-soft: #e1e4ea;
+  --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+/*  base  */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+}
+
+/* general link styling */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent-strong);
+}
+
+/*  navbar */
+#mainNav {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+#mainNav .navbar-nav .nav-link {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: #111 !important; /* keep very dark */
+  padding: 1.1rem 0.9rem;
+  position: relative;
+}
+
+#mainNav .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.55rem;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  border-radius: 1px;
+  transform: translateX(-50%);
+  transition: width 0.18s ease-out;
+}
+
+#mainNav .nav-link:hover::after {
+  width: 70%;
+}
+
+/* small devices */
+@media (max-width: 991.98px) {
+  #mainNav {
+    position: static;
+  }
+
+  #mainNav .navbar-nav .nav-link {
+    text-align: center;
+    padding: 0.7rem 0;
+  }
+}
+
+/*  hero / masthead */
+.masthead {
+  position: relative;
+  margin-bottom: 2.5rem;
+  padding: 6rem 0 4.5rem;
+  background: no-repeat center center;
+  background-size: cover;
+}
+
+.masthead::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 23, 42, 0.65),
+    rgba(15, 23, 42, 0.45)
+  );
+}
+
+.masthead .site-heading,
+.masthead .page-heading {
+  position: relative;
+  text-align: center;
+  color: #f9fafb;
+}
+
+.masthead .site-heading h1,
+.masthead .page-heading h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.3rem;
+}
+
+.masthead .subheading {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #e5e7eb;
+}
+
+/*  main containers  */
+.container {
+  max-width: 1100px;
+}
+
+/* page-level cards (home, admin, manage pages) */
+.container > .row > .col-md-10,
+.container > .row > .col-lg-8,
+.container > .row > .col-xl-7,
+.container > .row > .col-xl-10 {
+  background-color: var(--bg-card);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-soft);
+  padding: 1.75rem 1.75rem 2.25rem;
+}
+
+/* on pages with tables we already extend to xl-10;
+   keeps padding but avoids double rounded effect */
+.book-table + .mt-3,
+.d-flex.justify-content-center.my-5 {
+  margin-top: 1.5rem !important;
+}
+
+/*  footer  */
+footer {
+  margin-top: 3rem;
+  padding: 2.5rem 0;
+  background-color: #ffffff;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+footer .fa-stack-2x {
+  color: #111827;
+}
+footer .fa-stack-1x.fa-inverse {
+  color: #f9fafb;
+}
+
+footer .small {
+  color: var(--text-muted);
+}
+
+/*  tables (user library, admin tables)  */
+.table.book-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: #ffffff;
+  border-radius: 0.85rem;
+  overflow: hidden;
+}
+
+.book-table thead {
+  background: #f9fafb;
+}
+
+.book-table thead th {
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.book-table tbody tr {
+  border-bottom: 1px solid var(--border-soft);
+}
+.book-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.book-table tbody tr:hover {
+  background-color: #f5fbfd;
+}
+
+.book-table td,
+.book-table th {
+  padding: 0.9rem 0.75rem;
+  vertical-align: middle;
+}
+
+/* keeps action buttons aligned right and on one line */
+.actions-col {
+  white-space: nowrap;
+}
+
+/*  buttons: primary actions, danger actions, neutrals  */
+.action-btn,
+.add-book-btn {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.45rem 1.3rem;
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out,
+    background-color 0.12s ease-out, color 0.12s ease-out,
+    border-color 0.12s ease-out;
+}
+
+/* edit */
+.action-btn.btn-outline-primary {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: transparent;
+}
+.action-btn.btn-outline-primary:hover {
+  background-color: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 133, 161, 0.35);
+  transform: translateY(-1px);
+}
+
+/* delete */
+.action-btn.btn-outline-danger {
+  border-color: var(--danger);
+  color: var(--danger);
+  background-color: transparent;
+}
+.action-btn.btn-outline-danger:hover {
+  background-color: var(--danger);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(224, 49, 49, 0.32);
+  transform: translateY(-1px);
+}
+
+/* neutral big buttons: Add new book / Manage users / Manage books */
+.add-book-btn {
+  background-color: #e5e7eb;
+  border: 1px solid #d4d4d8;
+  color: #111827;
+  padding-inline: 2.3rem;
+}
+.add-book-btn:hover {
+  background-color: #d4d4d8;
+  border-color: #bdbfc7;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
+}
+
+/*  auth links (login/register small links)  */
+.signup-link,
+.login-link {
+  color: var(--accent);
+  font-weight: 600;
+}
+.signup-link:hover,
+.login-link:hover {
+  color: var(--accent-strong);
+  text-decoration: underline;
+}
+
+/*  flash error message on login/register  */
+.flash-message{
+    color: #dc3545;
+    font-weight: 600;
+    margin: 0.5rem 0 0;
+}
+
+/*  admin dashboard cards  */
+.card {
+  border: 1px solid var(--border-soft);
+  border-radius: 0.9rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.card .card-body {
+  padding: 1.25rem 1.3rem;
+}
+
+.card .card-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/*  responsiveness  */
+@media (max-width: 767.98px) {
+  .masthead {
+    padding: 4.5rem 0 3.5rem;
+  }
+
+  .masthead .site-heading h1,
+  .masthead .page-heading h1 {
+    font-size: 2.1rem;
+  }
+
+  .container > .row > .col-md-10,
+  .container > .row > .col-lg-8,
+  .container > .row > .col-xl-7,
+  .container > .row > .col-xl-10 {
+    padding-inline: 1.25rem;
+  }
+
+  .book-table td,
+  .book-table th {
+    font-size: 0.9rem;
+  }
+}
+
+
+/* fix masthead text visibility on white overlay */
+.masthead .site-heading h1,
+.masthead .page-heading h1 {
+    color: #1e293b !important; /* dark slate */
+}
+
+.masthead .subheading {
+    color: #333 !important; /* Medium-dark subtitle */
+}

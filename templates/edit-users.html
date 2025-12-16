@@ -1,0 +1,49 @@
+{% include "header.html" %}
+
+<header class="masthead" style="background-image: url('../static/assets/img/home-bg.jpg')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1>Edit User</h1>
+          <span class="subheading">{{ user.name }} ({{ user.email }})</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container px-4 px-lg-5 my-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+
+      {% for message in get_flashed_messages() %}
+        <p class="flash-message">{{ message }}</p>
+      {% endfor %}
+
+      <form method="post">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group mb-3">
+          {{ form.name.label(class="form-label") }}
+          {{ form.name(class="form-control") }}
+        </div>
+
+        <div class="form-group mb-3">
+          {{ form.email.label(class="form-label") }}
+          {{ form.email(class="form-control") }}
+        </div>
+
+        <div class="form-group mb-4">
+          {{ form.password.label(class="form-label") }}
+          {{ form.password(class="form-control") }}
+        </div>
+
+        {{ form.submit(class="btn btn-outline-secondary w-100") }}
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}

@@ -1,0 +1,84 @@
+{% include "header.html" %}
+
+<header
+  class="masthead"
+  style="background-image: url('../static/assets/img/home-bg.jpg')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1>Admin Dashboard</h1>
+          <span class="subheading">Overview of users and books</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container px-4 px-lg-5 my-5">
+  <div class="row mb-4 admin-stats">
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <h6 class="card-title">Users</h6>
+          <h3>{{ total_users }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <h6 class="card-title">Books</h6>
+          <h3>{{ total_books }}</h3>
+        </div>
+      </div>
+    </div>
+
+    {% if top_user %}
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <h6 class="card-title">Top user</h6>
+          <p class="mb-1">{{ top_user[0].name }}</p>
+          <small>{{ top_user[1] }} books</small>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if top_genre %}
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <h6 class="card-title">Top genre</h6>
+          <p class="mb-0">{{ top_genre[0] }}</p>
+          <small>{{ top_genre[1] }} books</small>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <a href="{{ url_for('blueprint.manage_users') }}" class="btn btn-outline-secondary w-100 mb-3 add-book-btn">
+        Manage users
+      </a>
+    </div>
+    <div class="col-md-4">
+      <a href="{{ url_for('blueprint.manage_books') }}" class="btn btn-outline-secondary w-100 mb-3 add-book-btn">
+        Manage books
+      </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('blueprint.admin_insights') }}" class="btn btn-outline-secondary w-100 mb-3 add-book-btn">
+            Library Insights
+        </a>
+    </div>
+  </div>
+
+
+</div>
+
+{% include "footer.html" %}

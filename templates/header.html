@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Library Management System</title>
+    {% block styles %}
+    {{ bootstrap.load_css() }}
+    <script
+      src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link
+      href="{{ url_for('static', filename='css/styles.css') }}"
+      rel="stylesheet"
+    />
+      <link
+              href="{{ url_for('static', filename='css/chatbot.css') }}"
+              rel="stylesheet"
+      />
+    {% endblock %}
+  </head>
+  <body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+      <div class="container px-4 px-lg-5">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarResponsive"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          Menu
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ms-auto py-4 py-lg-0">
+            {% if not logged_in %}
+            <li class="nav-item">
+              <a
+                class="nav-link px-lg-3 py-3 py-lg-4"
+                href="{{ url_for('blueprint.login') }}"
+                >Login</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link px-lg-3 py-3 py-lg-4"
+                href="{{ url_for('blueprint.register') }}"
+                >Register</a
+              >
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a
+                class="nav-link px-lg-3 py-3 py-lg-4"
+                href="{{ url_for('blueprint.home') }}"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link px-lg-3 py-3 py-lg-4"
+                href="{{ url_for('blueprint.logout') }}"
+                >Log Out</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+  {% if logged_in %}
+  <div id="chatbot-widget">
+    <div id="chatbot-launcher" onclick="toggleChat()">
+      <span class="bot-avatar">🤖</span>
+    </div>
+
+    <div id="chatbot-panel">
+      <div class="chat-header">
+        <div class="chat-title">AI Assistant</div>
+        <button class="chat-close" onclick="toggleChat()">✕</button>
+      </div>
+
+      <div id="chatbot-messages" class="chat-messages">
+        <!-- Messages will be injected here -->
+      </div>
+
+      <div class="chat-input-row">
+        <input
+          type="text"
+          id="chatbot-input"
+          placeholder="Ask about your library..."
+        />
+        <button class="chat-send-btn" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/chatbot-scripts.js') }}"></script>
+    {% endif %}
+
+  </body>
+</html>

@@ -1,0 +1,51 @@
+{% from "bootstrap5/form.html" import render_form %}
+
+{% include "header.html" %}
+
+<header
+  class="masthead"
+  style="background-image: url('../static/assets/img/addbook-bg.jpg')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="page-heading">
+          <h1>
+              {% if is_edit %}Edit Book{% else %}Add a new book{% endif %}
+          </h1>
+          <span class="subheading">
+              {% if not is_edit %}
+                {% if admin_target_user %}
+                    Adding book for {{ admin_target_user.name }}
+                {% else %}
+                    Add books to your personal library.
+                {% endif %}
+              {% endif %}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="mb-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+          {% if admin_target_user %}
+          <div class="alert alert-info mb-4" role="alert">
+              <strong>Admin Mode:</strong> You are adding a book to
+              <strong>{{ admin_target_user.name }}
+                  {% if admin_target_user.name.endswith('s') %}'{% else %}'s{% endif %}</strong>
+              Library ({{ admin_target_user.email }})
+          </div>
+                {% endif %}
+
+
+        {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+      </div>
+    </div>
+  </div>
+</main>
+
+{% include "footer.html" %}

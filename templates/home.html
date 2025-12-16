@@ -1,0 +1,100 @@
+{% include "header.html" %}
+
+<!-- Page Header -->
+<header
+  class="masthead"
+  style="background-image: url('../static/assets/img/home-bg.jpg')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-10">
+        <div class="site-heading">
+          <h1>{{ current_user.name }}{% if current_user.name.endswith('s') %}'{% else %}'s{% endif %} Library</h1>
+          <span class="subheading">Your collection of books</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<div class="container px-4 px-lg-5 my-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-10">
+
+      {% if not logged_in %}
+        <h4 class="text-center">
+          You need to register or log in to access the content.
+        </h4>
+
+      {% else %}
+
+        {% if all_books and all_books|length > 0 %}
+          <!-- Table-style grid of books -->
+          <div class="table-responsive">
+            <table class="table align-middle book-table">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Author</th>
+                  <th scope="col">Genre</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for book in all_books %}
+                  <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.genre }}</td>
+                    <td>{{ book.reading_status }}</td>
+                    <td class="text-end actions-col">
+                      <a
+                        href="{{ url_for('blueprint.edit_book', book_id=book.id) }}"
+                        class="btn btn-sm btn-outline-primary me-2 action-btn"
+                      >
+                        Edit
+                      </a>
+                      <a
+                        href="{{ url_for('blueprint.delete_book', book_id=book.id) }}"
+                        class="btn btn-sm btn-outline-danger action-btn"
+                      >
+                        Delete
+                      </a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Add book button under the table -->
+          <div class="mt-3">
+            <a
+              href="{{ url_for('blueprint.add_book') }}"
+              class="btn btn-lg btn-outline-secondary add-book-btn"
+            >
+              Add new book
+            </a>
+          </div>
+
+        {% else %}
+          <!-- Empty state -->
+          <div class="d-flex justify-content-center my-5">
+            <a
+              href="{{ url_for('blueprint.add_book') }}"
+              class="btn btn-lg btn-outline-secondary add-book-btn"
+            >
+              Add books to your listing
+            </a>
+          </div>
+        {% endif %}
+
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}

@@ -1,0 +1,76 @@
+{% include "header.html" %}
+
+<header
+  class="masthead"
+  style="background-image: url('../static/assets/img/home-bg.jpg')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1>{{ user.name }}{% if user.name.endswith('s') %}'{% else %}'s{% endif %} Books</h1>
+          <span class="subheading">{{ user.email }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container px-4 px-lg-5 my-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-10">
+
+      {% if books and books|length > 0 %}
+        <div class="table-responsive">
+          <table class="table align-middle book-table">
+            <thead class="table-light">
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for book in books %}
+                <tr>
+                  <td>{{ book.title }}</td>
+                  <td>{{ book.author }}</td>
+                  <td>{{ book.genre }}</td>
+                  <td>{{ book.reading_status }}</td>
+                  <td class="text-end actions-col">
+                    <a
+                      href="{{ url_for('blueprint.edit_book', book_id=book.id) }}"
+                      class="btn btn-sm btn-outline-primary me-2 action-btn"
+                    >
+                      Edit
+                    </a>
+                    <a
+                      href="{{ url_for('blueprint.delete_book', book_id=book.id) }}"
+                      class="btn btn-sm btn-outline-danger action-btn"
+                    >
+                      Delete
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-3">
+            <a href="{{ url_for('blueprint.admin_add_book', user_id=user.id) }}"
+               class="btn btn-lg btn-outline-secondary add-book-btn">
+                Add book for {{ user.name }}
+            </a>
+        </div>
+      {% else %}
+        <p class="text-center">This user has no books yet.</p>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}
