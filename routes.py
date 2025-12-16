@@ -168,6 +168,14 @@ def login():
             return redirect(url_for("blueprint.login"))
         else:
             login_user(user)
+
+            # one-time admin promotion for existing users
+            admin_email = (os.getenv("ADMIN_EMAIL") or "").strip().lower()
+            user_email = user.email.strip().lower()
+            if admin_email and user_email == admin_email and not user.is_admin:
+                user.is_admin = True
+                db.session.commit()
+
             return redirect(url_for("blueprint.home"))
 
     return render_template("login.html", form=login_form, logged_in=current_user.is_authenticated)
