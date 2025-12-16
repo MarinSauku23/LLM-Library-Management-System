@@ -49,7 +49,7 @@ class Books(db.Model):
 def create_app(test_config=None):
     app = Flask(__name__)
     app.secret_key = os.getenv("FLASK_SECRET_KEY")
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI", "sqlite:///users.db")
 
     if test_config:
         app.config.update(test_config)
