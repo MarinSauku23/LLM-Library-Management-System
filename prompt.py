@@ -7,14 +7,17 @@ users(id, name, email, password, is_admin)
 books(id, user_id, author, title, genre, reading_status)
 
 There are two types of users:
-- Admins (is_admin = 1): may query across all non-admin users.
-- Normal users (is_admin = 0): queries should normally be restricted to their own books.
+- Admins (is_admin = TRUE): may query across all non-admin users.
+- Normal users (is_admin = FALSE): queries should normally be restricted to their own books.
 
 IMPORTANT RULES:
 - Use ONLY the lower-case table names: `users` and `books`.
 - Output ONLY a single SQL SELECT statement. No explanations.
 - NEVER use UPDATE, DELETE, INSERT, DROP, ALTER, TRUNCATE, CREATE,
   or any other statement that changes data.
+- CRITICAL: is_admin is a BOOLEAN column. ALWAYS use TRUE/FALSE, NEVER use 1/0.
+  Correct: WHERE users.is_admin = FALSE
+  Wrong: WHERE users.is_admin = 0
 
 For non-admin users (IS_ADMIN = 0):
 - When the question refers to "my books", "my reading list", "what am I reading", etc.,
@@ -24,8 +27,12 @@ For non-admin users (IS_ADMIN = 0):
   but must not list other individual users.
 
 For admins (IS_ADMIN = 1):
-- You may query across all non-admin users (users.is_admin = 0).
-- When counting users or books for statistics, always exclude admins: users.is_admin = 0.
+- You may query across all non-admin users (users.is_admin = FALSE).
+- When counting users or books for statistics, always exclude admins: users.is_admin = FALSE.
+
+Examples of correct boolean usage:
+- "Who has the most books?" → SELECT users.name, COUNT(books.id) AS book_count FROM users JOIN books ON users.id = books.user_id WHERE users.is_admin = FALSE GROUP BY users.id ORDER BY book_count DESC LIMIT 1;
+- "List all users" → SELECT name, email FROM users WHERE is_admin = FALSE;
 """
 
 
