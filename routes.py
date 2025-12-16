@@ -427,6 +427,40 @@ def ai_chat():
 
         return jsonify({"reply": reply_text})
 
+
+    #             WEB SEARCH QUERIES
+    # checks if a query requires web search before attempting SQL
+    web_required = web_answers(user_message)
+
+    # if web search is required goes directly to web search path
+    if web_required:
+        # gets all the books from the library
+        if current_user.is_admin:
+            all_books = db.session.execute(db.select(Books).join(User)
+                                            .where(User.is_admin == False).order_by(Books.title)
+                                            ).scalars().all()
+            user_books = [
+                {"title": book.title, "author": book.author, "genre": book.genre}
+                for book in all_books
+            ]
+        else:
+            user_books = [
+                {"title": book.title, "author": book.author, "genre": book.genre}
+                for book in current_user.books
+            ]
+
+        try:
+            reply_text = answers_from_web(
+                user_question=user_message, user_books=user_books,
+                is_admin=current_user.is_admin
+            )
+        except Exception as e2:
+            print("Web-answer error:", repr(e2))
+            reply_text = "I tried looking this up on the internet, but something went wrong. Please try again later."
+
+        return jsonify({"reply": reply_text})
+
+
     #                READING HABIT ANALYSIS
     # specific to avoid catching recommendation queries
 
@@ -527,37 +561,7 @@ def ai_chat():
 
         return jsonify({"reply": reply_text})
 
-    #             WEB SEARCH QUERIES
-    # checks if a query requires web search before attempting SQL
-    web_required = web_answers(user_message)
 
-    # if web search is required goes directly to web search path
-    if web_required:
-        # gets all the books from the library
-        if current_user.is_admin:
-            all_books = db.session.execute(db.select(Books).join(User)
-                                           .where(User.is_admin == False).order_by(Books.title)
-                                           ).scalars().all()
-            user_books = [
-                {"title": book.title, "author": book.author, "genre": book.genre}
-                for book in all_books
-            ]
-        else:
-            user_books = [
-                {"title": book.title, "author": book.author, "genre": book.genre}
-                for book in current_user.books
-            ]
-
-        try:
-            reply_text = answers_from_web(
-                user_question=user_message, user_books=user_books,
-                is_admin=current_user.is_admin
-            )
-        except Exception as e2:
-            print("Web-answer error:", repr(e2))
-            reply_text = "I tried looking this up on the internet, but something went wrong. Please try again later."
-
-        return jsonify({"reply": reply_text})
 
     #                  SQL-BASED QUERIES
     sql_query = ai_to_sql(user_message, current_user.id, is_admin=current_user.is_admin)

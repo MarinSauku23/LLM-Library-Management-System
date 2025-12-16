@@ -113,7 +113,7 @@ The app will be available at [http://localhost:5000](http://localhost:5000)
 * "What's my most read genre?"
 * "Show me all my completed books"
 * "Which books am I reading right now?"
-* "Recommend me a new book based on my reading history"
+* "Recommend me new books based on my reading history"
 * "Summarize my reading habits"
 * "Give me a summary of what [any book title] is about"  (uses web search)
 
