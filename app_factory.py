@@ -64,27 +64,7 @@ def create_app(test_config=None):
     from routes import blueprint
     app.register_blueprint(blueprint)
 
-    # assigns the admin
-    def bootstrap_admin():
-        email = os.getenv("ADMIN_EMAIL")
-        if not email:
-            return
-
-        user = User.query.filter_by(email=email).first()
-        if user and not user.is_admin:
-            user.is_admin = True
-            db.session.commit()
-
     with app.app_context():
         db.create_all()
 
-    # Assigns the admin
-    # with app.app_context():
-    #     admin = User.query.filter_by(email="pini.sauku@gmail.com").first()
-    #     admin.is_admin = True
-    #     db.session.commit()
-
     return app
-
-
-

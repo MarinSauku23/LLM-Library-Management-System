@@ -1,3 +1,4 @@
+import os
 from collections import Counter
 from functools import wraps
 from flask import Blueprint, abort, render_template, redirect, url_for, flash, request, jsonify
@@ -118,6 +119,8 @@ def load_user(user_id):
 def register():
     register_form = RegisterForm()
     if register_form.validate_on_submit():
+        email = register_form.email.data.strip().lower()
+
         existing_user = db.session.execute(db.select(User).where(User.email == register_form.email.data)).scalar()
 
         if existing_user:
@@ -130,10 +133,14 @@ def register():
             salt_length=4
         )
 
+        # assigns the admin when first registering
+        admin_email = (os.getenv("ADMIN_EMAIL") or "").strip().lower()
+
         new_user = User(
             name=register_form.name.data,
             email=register_form.email.data,
-            password=hashed_password
+            password=hashed_password,
+            is_admin=(admin_email != "" and email == admin_email),
         )
 
         db.session.add(new_user)

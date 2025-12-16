@@ -283,11 +283,11 @@ Run tests with coverage report:
 
 ## 🌐 Live Demo
 
-**[View Live Application]()**
+**[View Live Application](https://llm-library-management-system.onrender.com)**
 
 Test Account:
-- Email: demo@example.com
-- Password: demo123
+- Email: test@example.com
+- Password: test123
 
 *Note: Please be respectful with the demo account. The AI chatbot uses OpenAI API which has usage costs.*
 
