@@ -4,6 +4,10 @@ from flask_login import LoginManager, UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Boolean
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 
@@ -44,7 +48,7 @@ class Books(db.Model):
 
 def create_app(test_config=None):
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "PINI"
+    app.secret_key = os.getenv("FLASK_SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
 
     if test_config:
