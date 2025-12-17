@@ -506,13 +506,13 @@ def ai_chat():
 
         if current_user.is_admin:
             patterns = [
-                r'\b([A-Z][a-z]+)(?:\'s?)\s+(?:reading|book|library)',
-                r'(?:for|about)\s+([A-Z][a-z]+)',
-                r'([A-Z][a-z]+)\s+(?:reading|book|library)',
+                r'\b([A-Za-z]+)(?:\'s?)\s+(?:reading|book|library)',
+                r'(?:for|about)\s+([A-Za-z]+)',
+                r'([A-Za-z]+)\s+(?:reading|book|library)',
             ]
             # finds user name in query
             for pattern in patterns:
-                match = re.search(pattern, user_message)
+                match = re.search(pattern, user_message, re.IGNORECASE)
                 if match:
                     potential_name = match.group(1).replace("'s", "").replace("'", "").strip()
                     target_user = User.query.filter(User.name.ilike(potential_name),
