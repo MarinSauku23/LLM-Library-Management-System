@@ -25,11 +25,13 @@ IMPORTANT RULES:
 - CRITICAL: is_admin is a BOOLEAN column. ALWAYS use TRUE/FALSE, NEVER use 1/0.
   Correct: WHERE users.is_admin = FALSE
   Wrong: WHERE users.is_admin = 0
-- When grouping by title or comparing titles, use LOWER(books.title) for case-insensitive matching.
+- When grouping by title or comparing titles, use LOWER(TRIM(books.title)) for case-insensitive matching.
+- CRITICAL: You will be given CURRENT_USER_ID as a number. Use that exact number in your WHERE clause.
+  Example: If CURRENT_USER_ID = 4, write "WHERE user_id = 4", NOT "WHERE user_id = CURRENT_USER_ID"
 
 For non-admin users (IS_ADMIN = 0):
 - When the question refers to "my books", "my reading list", "what am I reading", etc.,
-  filter with: books.user_id = CURRENT_USER_ID.
+  filter with: books.user_id = [the CURRENT_USER_ID number provided]
 - Do NOT reveal other users' names, emails, or specific book titles.
 - Global statistics like "What is the most popular genre overall?" may aggregate across all non-admin users,
   but must not list other individual users.
@@ -38,13 +40,16 @@ For admins (IS_ADMIN = 1):
 - You may query across all non-admin users (users.is_admin = FALSE).
 - When counting users or books for statistics, always exclude admins: users.is_admin = FALSE.
 
-Examples of correct queries:
-- "What's my most read genre?" → SELECT books.genre, COUNT(books.id) AS read_count FROM books WHERE books.user_id = CURRENT_USER_ID AND books.reading_status = 'Completed' GROUP BY books.genre ORDER BY read_count DESC LIMIT 1;
+Examples of correct queries (assuming CURRENT_USER_ID = 4):
+- "How many books do I have?" → SELECT COUNT(id) AS book_count FROM books WHERE user_id = 4;
+- "What's my most read genre?" → SELECT books.genre, COUNT(books.id) AS read_count FROM books WHERE books.user_id = 4 AND books.reading_status = 'Completed' GROUP BY books.genre ORDER BY read_count DESC LIMIT 1;
+- "What am I reading now?" → SELECT title, author FROM books WHERE user_id = 4 AND reading_status = 'Reading';
+- "Show my completed books" → SELECT title, author FROM books WHERE user_id = 4 AND reading_status = 'Completed';
+
+Admin queries (IS_ADMIN = 1):
 - "Which is the most popular book?" → SELECT MIN(books.title) as title, COUNT(books.id) AS popularity FROM books JOIN users ON books.user_id = users.id WHERE users.is_admin = FALSE GROUP BY LOWER(TRIM(books.title)) ORDER BY popularity DESC LIMIT 1;
 - "Who has the most books?" → SELECT users.name, COUNT(books.id) AS book_count FROM users JOIN books ON users.id = books.user_id WHERE users.is_admin = FALSE GROUP BY users.id ORDER BY book_count DESC LIMIT 1;
 - "List all users" → SELECT name, email FROM users WHERE is_admin = FALSE;
-- "What am I reading now?" → SELECT title, author FROM books WHERE user_id = CURRENT_USER_ID AND reading_status = 'Reading';
-- "Show my completed books" → SELECT title, author FROM books WHERE user_id = CURRENT_USER_ID AND reading_status = 'Completed';
 """
 
 
