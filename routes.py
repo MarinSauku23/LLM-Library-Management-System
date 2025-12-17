@@ -409,12 +409,18 @@ def ai_chat():
 
         # checks if user has books to base recommendations on
         if not user_books:
-            if current_user.is_admin and target_user:
-                return jsonify({
-                                   "reply": f"{target_user_name} doesn't have any books yet. Add some books to their library first to get recommendations."})
+            if current_user.is_admin:
+                if target_user:
+                    # admin asks about a specific user
+                    return jsonify({
+                                    "reply": f"{target_user_name} doesn't have any books yet. Add some books to their library first to get recommendations."})
+                # admin asks about themselves
+                else:
+                    return jsonify({
+                                    "reply": "You don't have any books yet. Add some books to your library first so I can give you personalized recommendations!"})
             else:
-                return jsonify({
-                                   "reply": "You don't have any books yet. Add some books to your library first so I can give you personalized recommendations!"})
+                # regular user asking about themselves
+                return jsonify({"reply": "You don't have any books yet. Add some books to your library first!"})
 
         try:
             reply_text = recommend_books(requester_name=current_user.name,
@@ -543,10 +549,17 @@ def ai_chat():
 
         # checks if user has books
         if not user_books:
-            if current_user.is_admin and target_user:
-                return jsonify(
-                    {"reply": f"{target_user_name} doesn't have any books yet. Add some books to their library first."})
+            if current_user.is_admin:
+                if target_user:
+                    # admin asks about a specific user
+                    return jsonify({
+                        "reply": f"{target_user_name} doesn't have any books yet. Add some books to their library first."})
+                # admin asks about themselves
+                else:
+                    return jsonify({
+                        "reply": "You don't have any books yet. Add some books to your library first."})
             else:
+                # regular user asking about themselves
                 return jsonify({"reply": "You don't have any books yet. Add some books to your library first!"})
 
         try:
