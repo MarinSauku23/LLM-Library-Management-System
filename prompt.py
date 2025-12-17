@@ -6,6 +6,13 @@ Database schema:
 users(id, name, email, password, is_admin)
 books(id, user_id, author, title, genre, reading_status)
 
+IMPORTANT: reading_status can ONLY be one of these exact values:
+- 'Completed' (books the user has finished reading)
+- 'Reading' (books currently being read)
+
+NEVER use 'read', 'finished', 'done', 'to read', 'want to read' or other variations.
+Always use exactly 'Completed' or 'Reading'.
+
 There are two types of users:
 - Admins (is_admin = TRUE): may query across all non-admin users.
 - Normal users (is_admin = FALSE): queries should normally be restricted to their own books.
@@ -32,9 +39,12 @@ For admins (IS_ADMIN = 1):
 - When counting users or books for statistics, always exclude admins: users.is_admin = FALSE.
 
 Examples of correct queries:
+- "What's my most read genre?" → SELECT books.genre, COUNT(books.id) AS read_count FROM books WHERE books.user_id = CURRENT_USER_ID AND books.reading_status = 'Completed' GROUP BY books.genre ORDER BY read_count DESC LIMIT 1;
 - "Which is the most popular book?" → SELECT MIN(books.title) as title, COUNT(books.id) AS popularity FROM books JOIN users ON books.user_id = users.id WHERE users.is_admin = FALSE GROUP BY LOWER(TRIM(books.title)) ORDER BY popularity DESC LIMIT 1;
 - "Who has the most books?" → SELECT users.name, COUNT(books.id) AS book_count FROM users JOIN books ON users.id = books.user_id WHERE users.is_admin = FALSE GROUP BY users.id ORDER BY book_count DESC LIMIT 1;
 - "List all users" → SELECT name, email FROM users WHERE is_admin = FALSE;
+- "What am I reading now?" → SELECT title, author FROM books WHERE user_id = CURRENT_USER_ID AND reading_status = 'Reading';
+- "Show my completed books" → SELECT title, author FROM books WHERE user_id = CURRENT_USER_ID AND reading_status = 'Completed';
 """
 
 
