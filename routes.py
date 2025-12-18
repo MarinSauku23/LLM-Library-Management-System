@@ -440,24 +440,65 @@ def ai_chat():
 
     # if web search is required goes directly to web search path
     if web_required:
-        # gets all the books from the library
+        # detects if admin is asking about a specific user
+        target_user = None
+        target_user_name = None
+
         if current_user.is_admin:
-            all_books = db.session.execute(db.select(Books).join(User)
-                                            .where(User.is_admin == False).order_by(Books.title)
-                                            ).scalars().all()
+            # uses same patterns as recommendations/habits
+            patterns = [
+                r'\b([A-Za-z]+)(?:\'s)\s+(?:books?|library|collection)',
+                r'(?:for|about|of)\s+([A-Za-z]+)',
+            ]
+
+            for pattern in patterns:
+                match = re.search(pattern, user_message, re.IGNORECASE)
+                if match:
+                    potential_name = match.group(1).replace("'s", "").strip()
+                    target_user = User.query.filter(
+                        User.name.ilike(potential_name),
+                        User.is_admin == False
+                    ).first()
+                    if target_user:
+                        break
+
+        # gets books based on target
+        if target_user:
+            # admin asking about specific user
+            user_books = [
+                {"title": book.title, "author": book.author, "genre": book.genre}
+                for book in target_user.books
+            ]
+            target_user_name = target_user.name
+        elif current_user.is_admin:
+            # admin asking about library in general
+            all_books = db.session.execute(
+                db.select(Books).join(User)
+                .where(User.is_admin == False).order_by(Books.title)
+            ).scalars().all()
             user_books = [
                 {"title": book.title, "author": book.author, "genre": book.genre}
                 for book in all_books
             ]
+            target_user_name = None
         else:
+            # regular user asking about their own books
             user_books = [
                 {"title": book.title, "author": book.author, "genre": book.genre}
                 for book in current_user.books
             ]
+            target_user_name = current_user.name
+
+        # checks if user has books (for specific user queries)
+        if target_user and not user_books:
+            return jsonify({
+                "reply": f"{target_user_name} doesn't have any books yet. Add some books to their library first."
+            })
 
         try:
             reply_text = answers_from_web(
-                user_question=user_message, user_books=user_books,
+                user_question=user_message,
+                user_books=user_books,
                 is_admin=current_user.is_admin
             )
         except Exception as e2:
