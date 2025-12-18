@@ -364,7 +364,7 @@ def ai_chat():
             # patterns: "recommend for [Name]", "add to [Name]'s library", "for user [Name]"
 
             # pattern 1: "for [Name]" or "to [Name]'s"
-            match = re.search(r'\b(?:for|to)\s+([A-Z][a-z]+(?:\'s)?)', user_message)
+            match = re.search(r'\b(?:for|to)\s+([A-Za-z]+(?:\'s)?)', user_message, re.IGNORECASE)
             if match:
                 potential_name = match.group(1).replace("'s", "").strip()
                 # finds user by name
@@ -375,7 +375,7 @@ def ai_chat():
 
             # pattern 2: "user [Name]"
             if not target_user:
-                match = re.search(r'\buser\s+([A-Z][a-z]+)', user_message, re.IGNORECASE)
+                match = re.search(r'\buser\s+([A-Za-z]+)', user_message, re.IGNORECASE)
                 if match:
                     potential_name = match.group(1).strip()
                     target_user = User.query.filter(User.name.ilike(potential_name),
